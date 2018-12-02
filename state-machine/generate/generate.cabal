@@ -2,13 +2,13 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 867292d8859ad7ce20a2ce2a9d43ff5462f233f6676ebebe154c31972efbbd01
+-- hash: c50584f3f5530bc83a9ed7d00dc3c14a4a2645729b6ca43948585d94dd633d15
 
-name:           hw-json-simd
+name:           generate
 version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/haskell-works/hw-json-simd#readme>
-homepage:       https://github.com/haskell-works/hw-json-simd#readme
-bug-reports:    https://github.com/haskell-works/hw-json-simd/issues
+description:    Please see the README on GitHub at <https://github.com/haskell-works/generate#readme>
+homepage:       https://github.com/haskell-works/generate#readme
+bug-reports:    https://github.com/haskell-works/generate/issues
 author:         John Ky
 maintainer:     newhoggy@gmail.com
 copyright:      2018 John Ky
@@ -21,7 +21,7 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/haskell-works/hw-json-simd
+  location: https://github.com/haskell-works/generate
 
 flag avx2
   description: Enable avx2 instruction set
@@ -40,12 +40,18 @@ flag sse42
 
 library
   exposed-modules:
+      StateMachine.Id
       StateMachine.List
       StateMachine.Pretty
+      StateMachine.Pretty.Embrace
+      StateMachine.Pretty.PLit
+      StateMachine.Pretty.WZero
       StateMachine.StateMachine
+      StateMachine.Table
+      StateMachine.Vec
       StateMachine.Word8
   other-modules:
-      Paths_hw_json_simd
+      Paths_generate
   hs-source-dirs:
       src
   ghc-options: -Wall
@@ -68,10 +74,10 @@ library
       c2hs
   default-language: Haskell2010
 
-executable hw-json-simd-exe
+executable generate-exe
   main-is: Main.hs
   other-modules:
-      Paths_hw_json_simd
+      Paths_generate
   hs-source-dirs:
       app
   ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
@@ -80,8 +86,8 @@ executable hw-json-simd-exe
     , binary
     , bits-extra
     , bytestring
+    , generate
     , hw-bits
-    , hw-json-simd
     , hw-prim
     , lens
     , mmap
@@ -94,11 +100,11 @@ executable hw-json-simd-exe
     , word8
   default-language: Haskell2010
 
-test-suite hw-json-simd-test
+test-suite generate-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
-      Paths_hw_json_simd
+      Paths_generate
   hs-source-dirs:
       test
   ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
@@ -107,8 +113,8 @@ test-suite hw-json-simd-test
     , binary
     , bits-extra
     , bytestring
+    , generate
     , hw-bits
-    , hw-json-simd
     , hw-prim
     , lens
     , mmap

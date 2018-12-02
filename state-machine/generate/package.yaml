@@ -1,6 +1,6 @@
-name:                hw-json-simd
+name:                generate
 version:             0.1.0.0
-github:              "haskell-works/hw-json-simd"
+github:              "haskell-works/generate"
 license:             BSD3
 author:              "John Ky"
 maintainer:          "newhoggy@gmail.com"
@@ -17,7 +17,7 @@ extra-source-files:
 # To avoid duplicated efforts in documentation and dealing with the
 # complications of embedding Haddock markup inside cabal files, it is
 # common to point users to the README.md file.
-description:         Please see the README on GitHub at <https://github.com/haskell-works/hw-json-simd#readme>
+description:         Please see the README on GitHub at <https://github.com/haskell-works/generate#readme>
 
 ghc-options: -Wall
 
@@ -43,7 +43,7 @@ library:
   source-dirs: src
 
 executables:
-  hw-json-simd-exe:
+  generate-exe:
     main:                Main.hs
     source-dirs:         app
     ghc-options:
@@ -51,11 +51,11 @@ executables:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
-    - hw-json-simd
+    - generate
     - optparse-applicative
 
 tests:
-  hw-json-simd-test:
+  generate-test:
     main:                Spec.hs
     source-dirs:         test
     ghc-options:
@@ -63,7 +63,7 @@ tests:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
-    - hw-json-simd
+    - generate
 
 flags:
   sse42:
