@@ -106,15 +106,6 @@ int main(
     size_t idx_bytes = (bytes_read + 7) / 8;
 
     fwrite(result_ib, 1, idx_bytes, ib_out);
-
-    // size_t out_bp_bytes = write_bp_chunk(
-    //   result_ib,
-    //   result_a,
-    //   result_z,
-    //   out_bp_buffer);
-
-    // fwrite(out_bp_buffer, out_bp_bytes, sizeof(uint64_t), bp_out);
-
     fflush(ib_out);
     fflush(bp_out);
   }

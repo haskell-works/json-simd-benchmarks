@@ -1,0 +1,121 @@
+-- This file has been generated from package.yaml by hpack version 0.28.2.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: 867292d8859ad7ce20a2ce2a9d43ff5462f233f6676ebebe154c31972efbbd01
+
+name:           hw-json-simd
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/haskell-works/hw-json-simd#readme>
+homepage:       https://github.com/haskell-works/hw-json-simd#readme
+bug-reports:    https://github.com/haskell-works/hw-json-simd/issues
+author:         John Ky
+maintainer:     newhoggy@gmail.com
+copyright:      2018 John Ky
+license:        BSD3
+build-type:     Simple
+cabal-version:  >= 1.10
+extra-source-files:
+    ChangeLog.md
+    README.md
+
+source-repository head
+  type: git
+  location: https://github.com/haskell-works/hw-json-simd
+
+flag avx2
+  description: Enable avx2 instruction set
+  manual: False
+  default: False
+
+flag bmi2
+  description: Enable bmi2 instruction set
+  manual: False
+  default: False
+
+flag sse42
+  description: Enable SSE 4.2 optimisations.
+  manual: False
+  default: True
+
+library
+  exposed-modules:
+      StateMachine.List
+      StateMachine.Pretty
+      StateMachine.StateMachine
+      StateMachine.Word8
+  other-modules:
+      Paths_hw_json_simd
+  hs-source-dirs:
+      src
+  ghc-options: -Wall
+  build-depends:
+      base >=4.7 && <5
+    , binary
+    , bits-extra
+    , bytestring
+    , hw-bits
+    , hw-prim
+    , lens
+    , mmap
+    , parallel
+    , prettyprinter
+    , split
+    , text
+    , vector
+    , word8
+  build-tools:
+      c2hs
+  default-language: Haskell2010
+
+executable hw-json-simd-exe
+  main-is: Main.hs
+  other-modules:
+      Paths_hw_json_simd
+  hs-source-dirs:
+      app
+  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , binary
+    , bits-extra
+    , bytestring
+    , hw-bits
+    , hw-json-simd
+    , hw-prim
+    , lens
+    , mmap
+    , optparse-applicative
+    , parallel
+    , prettyprinter
+    , split
+    , text
+    , vector
+    , word8
+  default-language: Haskell2010
+
+test-suite hw-json-simd-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_hw_json_simd
+  hs-source-dirs:
+      test
+  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , binary
+    , bits-extra
+    , bytestring
+    , hw-bits
+    , hw-json-simd
+    , hw-prim
+    , lens
+    , mmap
+    , parallel
+    , prettyprinter
+    , split
+    , text
+    , vector
+    , word8
+  default-language: Haskell2010

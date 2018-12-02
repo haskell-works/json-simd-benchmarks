@@ -6,7 +6,6 @@
 
 #include "simd.h"
 
-
 void sm_process_chunk(
     uint8_t *in_buffer,
     size_t in_length,

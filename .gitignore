@@ -35,3 +35,8 @@
 *.json
 *.idx
 *.txt
+
+# Haskell
+.stack-work
+dist
+

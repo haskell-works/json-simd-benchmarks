@@ -6,7 +6,6 @@
 
 #include "simd.h"
 
-
 void sm_process_chunk(
     uint8_t *in_buffer,
     size_t in_length,
@@ -25,12 +24,6 @@ void sm_process_chunk(
   uint8_t *buf6 = in_buffer + in_length_part * 6;
   uint8_t *buf7 = in_buffer + in_length_part * 7;
 
-  
-
-  // uint32_t *phi0 = out_phi_buffer;
-  // uint32_t *phi1 = out_phi_buffer + in_length_part * 1;
-  // uint32_t *phi2 = out_phi_buffer + in_length_part * 2;
-  // uint32_t *phi3 = out_phi_buffer + in_length_part * 3;
   __m256i offsets = _mm256_set_epi64x(in_length_part * 4, in_length_part * 2, in_length_part * 1, in_length_part * 0);
 
   __m256i s0 = _mm256_set_epi64x(0x0f0e0d0c0b0a0908, 0x00706050403020100, 0x0f0e0d0c0b0a0908, 0x00706050403020100);
