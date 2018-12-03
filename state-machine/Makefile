@@ -5,7 +5,7 @@ INSTALL = /usr/bin/install
 INSTALL_PROGRAM = $(INSTALL)
 INSTALL_DATA = $(INSTALL) -m 644
 
-DIRS = generate common basic aggressive-256-1
+DIRS = generate common basic aggressive-256-1 aggressive-256-2
 
 # the sets of directories to do various things in
 BUILDDIRS = $(DIRS:%=build-%)
