@@ -1,7 +1,7 @@
 all:
-	./project.sh test
 	./project.sh exec generate-exe
 
-test: all
+test:
+	./project.sh test
 
 clean:

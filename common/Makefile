@@ -21,11 +21,11 @@ $(BUILDDIRS):
 # the utils need the libraries in dev built first
 build-utils: build-dev
 
-install: $(INSTALLDIRS) all
+install: $(INSTALLDIRS)
 $(INSTALLDIRS):
 	$(MAKE) -C $(@:install-%=%) install
 
-test: $(TESTDIRS) all
+test: $(TESTDIRS)
 $(TESTDIRS): 
 	$(MAKE) -C $(@:test-%=%) test
 

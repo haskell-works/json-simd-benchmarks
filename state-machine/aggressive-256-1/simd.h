@@ -7,13 +7,6 @@
 #define W32_BUFFER_SIZE   (W8_BUFFER_SIZE / 4)
 #define W64_BUFFER_SIZE   (W8_BUFFER_SIZE / 8)
 
-extern __m256i transition_phi_table_wide[256];
-extern __m128i transition_phi_table[256];
-
-extern uint32_t transition_table_simd[];
-
-extern uint32_t phi_table_simd[];
-
 typedef struct bp_state bp_state_t;
 
 uint64_t process_chunk(
