@@ -13,7 +13,10 @@ void sm_process_chunk(
     size_t in_length,
     uint32_t *inout_state,
     uint32_t *out_phi_buffer) {  
-  __m256i s = _mm256_set_epi64x(0, *inout_state, 0, *inout_state);
+  // __m256i s = _mm256_set_epi64x(0, *inout_state, 0, *inout_state);
+  __m256i s = _mm256_set_epi32(
+    0x0f0e0d0c, 0x0b0a090a, 0x07060504, 0x03020100,
+    0x0f0e0d0c, 0x0b0a090a, 0x07060504, 0x03020100);
 
   size_t in_length_part = in_length / 4;
 
@@ -42,5 +45,18 @@ void sm_process_chunk(
     s = _mm256_shuffle_epi8(x31, s);
   }
 
-  *inout_state = _mm256_extract_epi64(s, 0);
+  __m256i t = _mm256_set_epi32(
+    0x00000000, 0x00000000, 0x00000000, 0x00000000,
+    0x0c0c0c0c, 0x08080808, 0x04040404, 0x00000000);
+
+  s = _mm256_sub_epi32(s, t);
+  
+  __m256i io_s = _mm256_set1_epi32(*inout_state);
+
+  io_s = _mm256_shuffle_epi8(                    s     , io_s);
+  io_s = _mm256_shuffle_epi8(_mm256_bsrli_epi128(s, 32), io_s);
+  io_s = _mm256_shuffle_epi8(_mm256_bsrli_epi128(s, 64), io_s);
+  io_s = _mm256_shuffle_epi8(_mm256_bsrli_epi128(s, 96), io_s);
+
+  *inout_state = _mm256_extract_epi64(io_s, 0);
 }
