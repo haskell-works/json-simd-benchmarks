@@ -11,7 +11,7 @@ extern __m256i simd_transition_phi_saturated_256[256];
 void sm_process_chunk(
     uint8_t *in_buffer,
     size_t in_length,
-    uint32_t *inout_state,
+    uint8_t *inout_state,
     uint32_t *out_phi_buffer) {  
   __m256i s = _mm256_set_epi64x(0, *inout_state, 0, *inout_state);
 
@@ -43,5 +43,21 @@ void sm_process_chunk(
     s = _mm256_shuffle_epi8(pt, s);
   }
 
-  *inout_state = _mm256_extract_epi64(s, 0);
+  __m256i t = _mm256_set_epi32(
+    0x0c0c0c0c, 0x08080808, 0x04040404, 0x00000000,
+    0x0c0c0c0c, 0x08080808, 0x04040404, 0x00000000);
+
+  s = _mm256_sub_epi32(s, t);
+  
+  __m256i io_s = _mm256_set1_epi32(*inout_state);
+
+                                                                uint8_t s0 = *inout_state;
+  io_s = _mm256_shuffle_epi8(                    s     , io_s); uint8_t s1 = _mm256_extract_epi8(io_s, 0);
+  io_s = _mm256_shuffle_epi8(_mm256_bsrli_epi128(s, 32), io_s); uint8_t s2 = _mm256_extract_epi8(io_s, 0);
+  io_s = _mm256_shuffle_epi8(_mm256_bsrli_epi128(s, 64), io_s); uint8_t s3 = _mm256_extract_epi8(io_s, 0);
+  io_s = _mm256_shuffle_epi8(_mm256_bsrli_epi128(s, 96), io_s); uint8_t sn = _mm256_extract_epi8(io_s, 0);
+
+
+
+  *inout_state = _mm256_extract_epi64(io_s, 0);
 }
