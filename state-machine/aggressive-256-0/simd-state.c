@@ -16,7 +16,10 @@ void sm_process_chunk(
   __m256i s = _mm256_set_epi64x(0, *inout_state, 0, *inout_state);
 
   for (size_t i = 0; i < in_length; i += 1) {
-    s = _mm256_shuffle_epi8(simd_transition_phi_saturated_256[in_buffer[i]], s);
+    __m256i tp = simd_transition_phi_saturated_256[in_buffer[i]];
+    __m256i p = _mm256_shuffle_epi8(tp, s);
+    out_phi_buffer[i] = _mm256_extract_epi32(p, 0);
+    s = _mm256_shuffle_epi8(tp, s);
   }
 
   *inout_state = _mm256_extract_epi64(s, 0);
