@@ -24,6 +24,10 @@ main = do
     hPutDoc h (withCHeader P.transitionTable)
   IO.withFile "../common/phi-table.c" IO.WriteMode $ \h ->
     hPutDoc h (withCHeader P.phiTable)
+  IO.withFile "../common/simd-transition-table-32.c" IO.WriteMode $ \h ->
+    hPutDoc h (withCHeader P.simdTransitionTable32)
+  IO.withFile "../common/simd-phi-table-32.c" IO.WriteMode $ \h ->
+    hPutDoc h (withCHeader P.simdPhiTable32)
   IO.withFile "../common/simd-transition-phi-table.c" IO.WriteMode $ \h ->
     hPutDoc h (withCHeader P.simdTransitionPhiTable128)
   IO.withFile "../common/simd-transition-phi-wide-table.c" IO.WriteMode $ \h ->

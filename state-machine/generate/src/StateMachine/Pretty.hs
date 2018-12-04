@@ -6,7 +6,7 @@ module StateMachine.Pretty
   , simdPhiTable32
   , simdTransitionPhiTable128
   , simdTransitionPhiTable256
-  , simdTransitionTable
+  , simdTransitionTable32
   , simdTransitionTableSaturated256
   , simdTransitionPhiTableSaturated256
   ) where
@@ -47,18 +47,18 @@ phiTable = vsep
         mkV :: [Word8] -> Doc ()
         mkV ws = embraceN (chunksOf 16 (fmap plit ws))
 
-simdTransitionTable :: Doc ()
-simdTransitionTable = vsep
-  [ "uint32_t transition_table[] ="
-  , embraceN (chunksOf 8 (fmap plit ws))
+simdTransitionTable32 :: Doc ()
+simdTransitionTable32 = vsep
+  [ "uint32_t simd_transition_table_32[] ="
+  , nest 2 (embraceN (chunksOf 8 (fmap plit ws))) <> ";"
   , ""
   ]
   where ws = word32 . fromIntegral <$> DVS.toList SM.transitionTableSimd
 
 simdPhiTable32 :: Doc ()
 simdPhiTable32 = vsep
-  [ "uint32_t phi_table[] ="
-  , embraceN (chunksOf 8 (fmap plit ws))
+  [ "uint32_t simd_phi_table_table[] ="
+  , nest 2 (embraceN (chunksOf 8 (fmap plit ws))) <> ";"
   , ""
   ]
   where ws = word32 . fromIntegral <$> DVS.toList SM.phiTableSimd
