@@ -6,7 +6,7 @@
 
 #include "simd.h"
 
-extern __m256i simd_transition_phi_saturated_256[256];
+extern uint32_t simd_phi_table_32[];
 extern uint32_t simd_transition_table_32[];
 
 void sm_process_chunk(
@@ -22,7 +22,7 @@ void sm_process_chunk(
   uint8_t *buf1 = in_buffer + part_length;
 
   for (size_t i = 0; i < part_length; i += 1) {
-    __m256i tp = _mm256_set_epi32(0, 0, 0, simd_transition_table_32[buf1[i]], 0, 0, 0, simd_transition_table_32[buf0[i]]);
+    __m256i tp = _mm256_set_epi32(0, 0, 0, simd_phi_table_32[buf1[i]], 0, 0, 0, simd_transition_table_32[buf0[i]]);
     // __m256i p = _mm256_shuffle_epi8(tp, s);
     // out_phi_buffer[i] = _mm256_extract_epi32(p, 0);
     s = _mm256_shuffle_epi8(tp, s);
