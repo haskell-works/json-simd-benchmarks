@@ -15,7 +15,8 @@ DIRS = \
 	aggressive-256-3 \
 	aggressive-256-4 \
 	aggressive-256-5 \
-	aggressive-256-6
+	aggressive-256-6 \
+	aggressive-256-7
 
 # the sets of directories to do various things in
 BUILDDIRS = $(DIRS:%=build-%)

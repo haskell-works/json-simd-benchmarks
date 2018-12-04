@@ -1,0 +1,1 @@
+../common/transition-table.c
