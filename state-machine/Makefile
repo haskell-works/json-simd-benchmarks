@@ -9,6 +9,7 @@ DIRS = \
 	generate \
 	common \
 	basic \
+	aggressive-256-0 \
 	aggressive-256-1 \
 	aggressive-256-2 \
 	aggressive-256-3 \
