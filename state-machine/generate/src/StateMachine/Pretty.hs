@@ -4,6 +4,8 @@ module StateMachine.Pretty
   ( transitionTable
   , phiTable
   , simdPhiTable32
+  , simdPhiTable128
+  , simdTransitionTable128
   , simdTransitionPhiTable128
   , simdTransitionPhiTable256
   , simdTransitionTable32
@@ -72,6 +74,27 @@ simdTransitionPhiTable256 = vsep
   where pts = zipWith (\p t -> Vec4 t WZero p WZero)
                   (word64 . fromIntegral <$>  DVS.toList SM.phiTableSimd        )
                   (                           DVS.toList SM.transitionTableSimd )
+
+simdTransitionTable128 :: Doc ()
+simdTransitionTable128 = vsep
+  [ "__m128i simd_transition_phi_table[128] ="
+  , nest 2 ("  " <> embraceN (chunksOf 1 (fmap plit pts))) <> ";"
+  , ""
+  ]
+  where pts = zipWith (flip Vec2)
+                  (word64 . fromIntegral <$>  DVS.toList SM.phiTableSimd        )
+                  (                           DVS.toList SM.transitionTableSimd )
+
+simdPhiTable128 :: Doc ()
+simdPhiTable128 = vsep
+  [ "__m128i simd_transition_phi_table[128] ="
+  , nest 2 ("  " <> embraceN (chunksOf 1 (fmap plit pts))) <> ";"
+  , ""
+  ]
+  where pts = zipWith (flip Vec2)
+                  (word64 . fromIntegral <$>  DVS.toList SM.phiTableSimd        )
+                  (                           DVS.toList SM.transitionTableSimd )
+
 
 simdTransitionPhiTable128 :: Doc ()
 simdTransitionPhiTable128 = vsep
