@@ -138,18 +138,18 @@ void make_ib_bp_chunks(
     uint8_t *out_ibs,
     uint8_t *out_ops,
     uint8_t *out_cls) {
-  __m128i ib_offset = _mm_set_epi64x(0, 5 + state * 8);
-  __m128i op_offset = _mm_set_epi64x(0, 6 + state * 8);
-  __m128i cl_offset = _mm_set_epi64x(0, 7 + state * 8);
+  uint32_t ib_offset = 5 + state * 8;
+  uint32_t op_offset = 6 + state * 8;
+  uint32_t cl_offset = 7 + state * 8;
 
   for (size_t i = 0; i < phi_length; i += 8) {
-    __m128i v_8 = *(__m128i *)&in_phis[i];
-    __m128i v_ib_8 = _mm_sll_epi64(v_8, ib_offset);
-    __m128i v_op_8 = _mm_sll_epi64(v_8, op_offset);
-    __m128i v_cl_8 = _mm_sll_epi64(v_8, cl_offset);
-    uint8_t all_ibs = (uint8_t)_pext_u32(_mm_movemask_epi8(v_ib_8), 0x11111111);
-    uint8_t all_ops = (uint8_t)_pext_u32(_mm_movemask_epi8(v_op_8), 0x11111111);
-    uint8_t all_cls = (uint8_t)_pext_u32(_mm_movemask_epi8(v_cl_8), 0x11111111);
+    __m256i v_8 = *(__m256i *)&in_phis[i];
+    __m256i v_ib_8 = _mm256_slli_epi64(v_8, ib_offset);
+    __m256i v_op_8 = _mm256_slli_epi64(v_8, op_offset);
+    __m256i v_cl_8 = _mm256_slli_epi64(v_8, cl_offset);
+    uint8_t all_ibs = (uint8_t)_pext_u32(_mm256_movemask_epi8(v_ib_8), 0x11111111);
+    uint8_t all_ops = (uint8_t)_pext_u32(_mm256_movemask_epi8(v_op_8), 0x11111111);
+    uint8_t all_cls = (uint8_t)_pext_u32(_mm256_movemask_epi8(v_cl_8), 0x11111111);
 
     size_t j = i / 8;
     out_ibs[j] = all_ibs;
