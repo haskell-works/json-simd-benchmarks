@@ -77,7 +77,7 @@ simdTransitionPhiTable256 = vsep
 
 simdTransitionTable128 :: Doc ()
 simdTransitionTable128 = vsep
-  [ "__m128i simd_transition__128[256] ="
+  [ "__m128i simd_transition_128[256] ="
   , nest 2 ("  " <> embraceN (chunksOf 1 (fmap plit pts))) <> ";"
   , ""
   ]
