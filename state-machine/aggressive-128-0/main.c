@@ -4,6 +4,21 @@
 #include <string.h>
 #include <immintrin.h>
 
+typedef struct bp_state {
+  uint64_t  remainder_bits_d;
+  uint64_t  remainder_bits_a;
+  uint64_t  remainder_bits_z;
+  size_t    remainder_len;
+} bp_state_t;
+
+size_t write_bp_chunk(
+    uint8_t *result_ib,
+    uint8_t *result_a,
+    uint8_t *result_z,
+    size_t ib_bytes,
+    bp_state_t *bp_state,
+    uint8_t *out_buffer);
+
 int main(
     int argc,
     char **argv) {
@@ -64,6 +79,7 @@ int main(
   uint32_t result_a [W8_BUFFER_SIZE];
   uint32_t result_z [W8_BUFFER_SIZE];
   uint64_t accum = 0;
+  bp_state_t bp_state = {0, 0, 0, 0};
 
   uint8_t out_bp_buffer[W32_BUFFER_SIZE * 2];
 
@@ -109,13 +125,15 @@ int main(
 
     fwrite(ibs_buffer, 1, idx_bytes, ib_out);
 
-    // size_t out_bp_bytes = write_bp_chunk(
-    //   result_ib,
-    //   result_a,
-    //   result_z,
-    //   out_bp_buffer);
+    size_t out_bp_bytes = write_bp_chunk(
+      result_ib,
+      result_a,
+      result_z,
+      idx_bytes,
+      &bp_state,
+      out_bp_buffer);
 
-    // fwrite(out_bp_buffer, out_bp_bytes, sizeof(uint64_t), bp_out);
+    fwrite(out_bp_buffer, out_bp_bytes, sizeof(uint64_t), bp_out);
 
     fflush(ib_out);
     fflush(bp_out);
@@ -168,4 +186,77 @@ void make_ib_bp_chunks(
     //   exit(1);
     // }
   }
+}
+
+size_t write_bp_chunk(
+    uint8_t *result_ib,
+    uint8_t *result_a,
+    uint8_t *result_z,
+    size_t ib_bytes,
+    bp_state_t *bp_state,
+    uint8_t *out_buffer) {
+  uint64_t *w64_result_ib = (uint64_t *)result_ib;
+  uint64_t *w64_result_a  = (uint64_t *)result_a;
+  uint64_t *w64_result_z  = (uint64_t *)result_z;
+  uint64_t *w64_work_bp   = (uint64_t *)out_buffer;
+
+  uint64_t  w64_len           = ib_bytes / 8;
+  uint64_t  remainder_bits_d  = (*bp_state).remainder_bits_d;
+  uint64_t  remainder_bits_a  = (*bp_state).remainder_bits_a;
+  uint64_t  remainder_bits_z  = (*bp_state).remainder_bits_z;
+  size_t    remainder_len     = (*bp_state).remainder_len;
+  size_t    w64s_ready        = 0;
+
+  for (size_t i = 0; i < w64_len; ++i) {
+    uint64_t w64_ib = w64_result_ib[i];
+    uint64_t w64_a  = w64_result_a[i];
+    uint64_t w64_z  = w64_result_z[i];
+
+    size_t pc_ib = __builtin_popcountll(w64_ib);
+
+    uint64_t ext_d = _pext_u64(~(w64_a | w64_z) , w64_ib);
+    uint64_t ext_a = _pext_u64(w64_a            , w64_ib);
+    uint64_t ext_z = _pext_u64(w64_z            , w64_ib);
+
+    remainder_bits_d |= (ext_d << remainder_len);
+    remainder_bits_a |= (ext_a << remainder_len);
+    remainder_bits_z |= (ext_z << remainder_len);
+
+    if (remainder_len + pc_ib >= 64) {
+      // Write full word
+      w64_work_bp[w64s_ready] =
+        _pdep_u64(remainder_bits_a, 0x5555555555555555) |
+        _pdep_u64(remainder_bits_a, 0xaaaaaaaaaaaaaaaa) |
+        _pdep_u64(remainder_bits_d, 0xaaaaaaaaaaaaaaaa);
+
+      w64s_ready += 1;
+
+      remainder_bits_a = remainder_bits_a >> 32;
+      remainder_bits_z = remainder_bits_z >> 32;
+      remainder_bits_d = remainder_bits_d >> 32;
+
+      w64_work_bp[w64s_ready] =
+        _pdep_u64(remainder_bits_a, 0x5555555555555555) |
+        _pdep_u64(remainder_bits_a, 0xaaaaaaaaaaaaaaaa) |
+        _pdep_u64(remainder_bits_d, 0xaaaaaaaaaaaaaaaa);
+
+      w64s_ready += 1;
+
+      // Set up for next iteration
+      remainder_bits_d = ext_d >> (64 - remainder_len);
+      remainder_bits_a = ext_a >> (64 - remainder_len);
+      remainder_bits_z = ext_z >> (64 - remainder_len);
+
+      remainder_len = remainder_len + pc_ib - 64;
+    } else {
+      remainder_len += pc_ib;
+    }
+  }
+
+  (*bp_state).remainder_bits_d  = remainder_bits_d;
+  (*bp_state).remainder_bits_a  = remainder_bits_a;
+  (*bp_state).remainder_bits_z  = remainder_bits_z;
+  (*bp_state).remainder_len     = remainder_len;
+
+  return w64s_ready;
 }
