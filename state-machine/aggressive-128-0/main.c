@@ -233,6 +233,12 @@ size_t write_bp_chunk(
         _pdep_u64(remainder_bits_a, 0xaaaaaaaaaaaaaaaa) |
         _pdep_u64(remainder_bits_d, 0xaaaaaaaaaaaaaaaa);
 
+      printf("remainder_bits_d: "); print_bits_64(remainder_bits_d); printf("\n");
+      printf("remainder_bits_a: "); print_bits_64(remainder_bits_a); printf("\n");
+      printf("remainder_bits_z: "); print_bits_64(remainder_bits_z); printf("\n");
+
+      printf("%d: ", i); print_bits_64(w64_work_bp[w64s_ready]); printf(" <===\n");
+ 
       w64s_ready += 1;
 
       remainder_bits_a = remainder_bits_a >> 32;
