@@ -126,9 +126,9 @@ int main(
     fwrite(ibs_buffer, 1, idx_bytes, ib_out);
 
     size_t out_bp_bytes = write_bp_chunk(
-      result_ib,
-      result_a,
-      result_z,
+      ibs_buffer,
+      ops_buffer,
+      cls_buffer,
       idx_bytes,
       &bp_state,
       out_bp_buffer);
@@ -208,6 +208,10 @@ size_t write_bp_chunk(
   size_t    w64s_ready        = 0;
 
   for (size_t i = 0; i < w64_len; ++i) {
+    printf("ib: "); print_bits_64(w64_result_ib[i]); printf("\n");
+    printf("op: "); print_bits_64(w64_result_a [i]); printf("\n");
+    printf("cl: "); print_bits_64(w64_result_z [i]); printf("\n");
+
     uint64_t w64_ib = w64_result_ib[i];
     uint64_t w64_a  = w64_result_a[i];
     uint64_t w64_z  = w64_result_z[i];
@@ -240,6 +244,12 @@ size_t write_bp_chunk(
         _pdep_u64(remainder_bits_a, 0xaaaaaaaaaaaaaaaa) |
         _pdep_u64(remainder_bits_d, 0xaaaaaaaaaaaaaaaa);
 
+      printf("remainder_bits_d: "); print_bits_64(remainder_bits_d); printf("\n");
+      printf("remainder_bits_a: "); print_bits_64(remainder_bits_a); printf("\n");
+      printf("remainder_bits_z: "); print_bits_64(remainder_bits_z); printf("\n");
+
+      printf("%d: ", i); print_bits_64(w64_work_bp[w64s_ready]); printf(" <===\n");
+ 
       w64s_ready += 1;
 
       // Set up for next iteration
@@ -248,10 +258,13 @@ size_t write_bp_chunk(
       remainder_bits_z = ext_z >> (64 - remainder_len);
 
       remainder_len = remainder_len + pc_ib - 64;
+
+      exit(1);
     } else {
       remainder_len += pc_ib;
     }
   }
+
 
   (*bp_state).remainder_bits_d  = remainder_bits_d;
   (*bp_state).remainder_bits_a  = remainder_bits_a;
