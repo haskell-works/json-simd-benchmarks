@@ -33,6 +33,30 @@ void fprint128_num(FILE *file, __m128i var) {
     , val[ 8], val[ 9], val[10], val[11], val[12], val[13], val[14], val[15]);
 }
 
+void print_bits_8(uint8_t v) {
+  char *digits = "01";
+
+  for (int i = 0; i < 8; ++i) {
+    printf("%c", digits[(v >> i) & 1]);
+  }
+}
+
+void print_bits_16(uint16_t v) {
+  char *digits = "01";
+
+  for (int i = 0; i < 16; ++i) {
+    printf("%c", digits[(v >> i) & 1]);
+  }
+}
+
+void print_bits_32(uint32_t v) {
+  char *digits = "01";
+
+  for (int i = 0; i < 32; ++i) {
+    printf("%c", digits[(v >> i) & 1]);
+  }
+}
+
 void print_bits_64(uint64_t v) {
   char *digits = "01";
 

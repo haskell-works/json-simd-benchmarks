@@ -4,6 +4,8 @@
 #include <string.h>
 #include <immintrin.h>
 
+#include "debug.h"
+
 #include "simd.h"
 
 extern uint32_t simd_transition_table_32[256];
@@ -21,6 +23,11 @@ void sm_process_chunk(
     __m128i p = _mm_shuffle_epi8(_mm_set1_epi32(simd_phi_table_32[w]), s);
     out_phi_buffer[i] = _mm_extract_epi32(p, 0);
     s = _mm_shuffle_epi8(_mm_set1_epi32(simd_transition_table_32[w]), s);
+
+    printf("%02zu: ", i); print_bits_8(w); printf("\n");
+
+    if (i > 10)
+      exit(1);
   }
 
   *inout_state = _mm_extract_epi64(s, 0);

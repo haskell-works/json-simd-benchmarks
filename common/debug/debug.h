@@ -10,4 +10,10 @@ void fprint256_num(FILE *file, __m256i var);
 
 void fprint128_num(FILE *file, __m128i var);
 
+void print_bits_8(uint8_t v);
+
+void print_bits_16(uint16_t v);
+
+void print_bits_32(uint32_t v);
+
 void print_bits_64(uint64_t v);
