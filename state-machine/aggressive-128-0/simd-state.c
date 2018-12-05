@@ -6,8 +6,8 @@
 
 #include "simd.h"
 
-extern __m128i simd_transition_128[256];
-extern __m128i simd_phi_128       [256];
+extern uint32_t simd_transition_table_32[256];
+extern uint32_t simd_phi_table_32       [256];
 
 void sm_process_chunk(
     uint8_t *in_buffer,
@@ -17,9 +17,10 @@ void sm_process_chunk(
   __m128i s = _mm_set_epi64x(0, *inout_state);
 
   for (size_t i = 0; i < in_length; i += 1) {
-    __m128i p = _mm_shuffle_epi8(simd_phi_128[in_buffer[i]], s);
+    uint8_t w = in_buffer[i];
+    __m128i p = _mm_shuffle_epi8(_mm_set1_epi32(simd_phi_table_32[w]), s);
     out_phi_buffer[i] = _mm_extract_epi32(p, 0);
-    s = _mm_shuffle_epi8(simd_transition_128[in_buffer[i]], s);
+    s = _mm_shuffle_epi8(_mm_set1_epi32(simd_transition_table_32[w]), s);
   }
 
   *inout_state = _mm_extract_epi64(s, 0);

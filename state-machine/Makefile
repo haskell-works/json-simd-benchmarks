@@ -8,7 +8,8 @@ INSTALL_DATA = $(INSTALL) -m 644
 DIRS = \
 	generate \
 	common \
-	basic \
+	basic  \
+	aggressive-128-0 \
 	aggressive-256-0 \
 	aggressive-256-1 \
 	aggressive-256-2 \
@@ -17,8 +18,7 @@ DIRS = \
 	aggressive-256-5 \
 	aggressive-256-6 \
 	aggressive-256-7 \
-	aggressive-256-8 \
-	aggressive-256-9
+	aggressive-256-8
 
 # the sets of directories to do various things in
 BUILDDIRS = $(DIRS:%=build-%)
