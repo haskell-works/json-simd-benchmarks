@@ -105,7 +105,7 @@ int main(
 
     size_t idx_bytes = (bytes_read + 7) / 8;
 
-    fwrite(result_ib, 1, idx_bytes, ib_out);
+    fwrite(ibs_buffer, 1, idx_bytes, ib_out);
 
     // size_t out_bp_bytes = write_bp_chunk(
     //   result_ib,
