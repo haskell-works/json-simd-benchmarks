@@ -24,7 +24,9 @@ void sm_process_chunk(
     out_phi_buffer[i] = _mm_extract_epi32(p, 0);
     s = _mm_shuffle_epi8(_mm_set1_epi32(simd_transition_table_32[w]), s);
 
-    printf("%02zu: ", i); print_bits_8(w); printf("\n");
+    uint32_t s32 = _mm_extract_epi32(s, 0) & 0xff;
+
+    printf("%02zu: ", i); printf("%c ", w); printf("%d ", s32); printf("\n");
 
     if (i > 10)
       exit(1);
