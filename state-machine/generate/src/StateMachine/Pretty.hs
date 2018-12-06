@@ -60,7 +60,7 @@ simdTransitionTable32 = vsep
 simdPhiTable32 :: Doc ()
 simdPhiTable32 = vsep
   [ "uint32_t simd_phi_table_32[] ="
-  , nest 2 (" " <> embraceN (chunksOf 8 (fmap plit ws))) <> ";"
+  , nest 2 ("  " <> embraceN (chunksOf 8 (fmap plit ws))) <> ";"
   , ""
   ]
   where ws = word32 . fromIntegral <$> DVS.toList SM.phiTableSimd

@@ -27,3 +27,108 @@ void sm_process_chunk(
 
   *inout_state = _mm_extract_epi64(s, 0);
 }
+
+void make_ib_bp_chunks(
+    uint8_t state,
+    uint32_t *in_phis,
+    size_t phi_length,
+    uint8_t *out_ibs,
+    uint8_t *out_ops,
+    uint8_t *out_cls) {
+
+  uint32_t ib_offset = 5 + state * 8;
+  uint32_t op_offset = 6 + state * 8;
+  uint32_t cl_offset = 7 + state * 8;
+
+  for (size_t i = 0; i < phi_length; i += 8) {
+    __m256i v_8 = *(__m256i *)&in_phis[i];
+    __m256i v_ib_8 = _mm256_slli_epi64(v_8, ib_offset);
+    __m256i v_op_8 = _mm256_slli_epi64(v_8, op_offset);
+    __m256i v_cl_8 = _mm256_slli_epi64(v_8, cl_offset);
+    uint8_t all_ibs = (uint8_t)_pext_u32(_mm256_movemask_epi8(v_ib_8), 0x11111111);
+    uint8_t all_ops = (uint8_t)_pext_u32(_mm256_movemask_epi8(v_op_8), 0x11111111);
+    uint8_t all_cls = (uint8_t)_pext_u32(_mm256_movemask_epi8(v_cl_8), 0x11111111);
+
+    size_t j = i / 8;
+    out_ibs[j] = all_ibs;
+    out_ops[j] = all_ops;
+    out_cls[j] = all_cls;
+  }
+}
+
+size_t
+write_bits(
+    uint64_t bits,
+    size_t bits_len,
+    uint64_t *remaining_bits,
+    size_t *remaning_bits_len,
+    uint64_t *out_buffer);
+
+size_t write_bp_chunk(
+    uint8_t *result_op,
+    uint8_t *result_cl,
+    size_t ib_bytes,
+    uint64_t *remaining_bits,
+    size_t *remaning_bits_len,
+    uint8_t *out_buffer) {
+  uint64_t *w64_result_op = (uint64_t *)result_op;
+  uint64_t *w64_result_cl = (uint64_t *)result_cl;
+  uint64_t *w64_work_bp   = (uint64_t *)out_buffer;
+
+  uint64_t  w64_len           = ib_bytes / 8;
+  size_t    w64s_ready        = 0;
+
+  for (size_t i = 0; i < w64_len; ++i) {
+    uint64_t w64_op = w64_result_op[i];
+    uint64_t w64_cl = w64_result_cl[i];
+
+    uint64_t w64_op_lo = w64_op;
+    uint64_t w64_op_hi = w64_op >> 32;
+
+    uint64_t w64_cl_lo = w64_cl;
+    uint64_t w64_cl_hi = w64_cl >> 32;
+
+    uint64_t op_lo = _pdep_u64(w64_op_lo, 0x5555555555555555);
+    uint64_t cl_lo = _pdep_u64(w64_cl_lo, 0xaaaaaaaaaaaaaaaa);
+    uint64_t ib_lo = op_lo | cl_lo;
+
+    uint64_t op_hi = _pdep_u64(w64_op_hi, 0x5555555555555555);
+    uint64_t cl_hi = _pdep_u64(w64_cl_hi, 0xaaaaaaaaaaaaaaaa);
+    uint64_t ib_hi = op_hi | cl_hi;
+
+    size_t pc_ib_lo = __builtin_popcountll(ib_lo);
+    size_t pc_ib_hi = __builtin_popcountll(ib_hi);
+
+    uint64_t ext_lo = _pext_u64(op_lo, ib_lo);
+    uint64_t ext_hi = _pext_u64(op_hi, ib_hi);
+
+    w64s_ready += write_bits(ext_lo, pc_ib_lo, remaining_bits, remaning_bits_len, w64_work_bp + w64s_ready);
+    w64s_ready += write_bits(ext_hi, pc_ib_hi, remaining_bits, remaning_bits_len, w64_work_bp + w64s_ready);
+  }
+
+  return w64s_ready;
+}
+
+size_t
+write_bits(
+    uint64_t bits,
+    size_t bits_len,
+    uint64_t *remaining_bits,
+    size_t *remaining_bits_len,
+    uint64_t *out_buffer) {
+  *remaining_bits |= (bits << *remaining_bits_len);
+
+  if (*remaining_bits_len + bits_len >= 64) {
+    *out_buffer = *remaining_bits;
+
+    *remaining_bits = bits >> (64 - *remaining_bits_len);
+
+    *remaining_bits_len = *remaining_bits_len + bits_len - 64;
+
+    return 1;
+  } else {
+    *remaining_bits_len += bits_len;
+
+    return 0;
+  }
+}
