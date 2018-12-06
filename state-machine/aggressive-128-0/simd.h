@@ -31,11 +31,11 @@ void init_bp_state(
     bp_state_t *bp_state);
 
 size_t write_bp_chunk(
-    uint8_t *result_ib,
-    uint8_t *result_a,
-    uint8_t *result_z,
+    uint8_t *result_op,
+    uint8_t *result_cl,
     size_t ib_bytes,
-    bp_state_t *bp_state,
+    uint64_t *remaining_bp_bits,
+    size_t *remaning_bp_bits_len,
     uint8_t *out_buffer);
 
 size_t write_bp_chunk_final(
