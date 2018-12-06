@@ -30,14 +30,13 @@ sm_process_chunk(
 }
 
 void
-sm_make_ib_bp_chunks(
+sm_make_ib_op_cl_chunks(
     uint8_t state,
     uint32_t *in_phis,
     size_t phi_length,
     uint8_t *out_ibs,
     uint8_t *out_ops,
     uint8_t *out_cls) {
-
   uint32_t ib_offset = 5 + state * 8;
   uint32_t op_offset = 6 + state * 8;
   uint32_t cl_offset = 7 + state * 8;
