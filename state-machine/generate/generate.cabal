@@ -1,8 +1,10 @@
--- This file has been generated from package.yaml by hpack version 0.28.2.
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.31.1.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: c50584f3f5530bc83a9ed7d00dc3c14a4a2645729b6ca43948585d94dd633d15
+-- hash: b9a50e95f2d4e06cb9d0cf40e28741c1ba0610bb385902a75f9f96f37e241bb0
 
 name:           generate
 version:        0.1.0.0
@@ -14,10 +16,9 @@ maintainer:     newhoggy@gmail.com
 copyright:      2018 John Ky
 license:        BSD3
 build-type:     Simple
-cabal-version:  >= 1.10
 extra-source-files:
-    ChangeLog.md
     README.md
+    ChangeLog.md
 
 source-repository head
   type: git
