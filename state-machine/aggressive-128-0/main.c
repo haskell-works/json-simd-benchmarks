@@ -103,7 +103,7 @@ int main(
       &state,
       phi_buffer);
 
-    make_ib_bp_chunks(chunk_state, phi_buffer, bytes_read,
+    sm_make_ib_bp_chunks(chunk_state, phi_buffer, bytes_read,
       ibs_buffer,
       ops_buffer,
       cls_buffer);
@@ -112,7 +112,7 @@ int main(
 
     fwrite(ibs_buffer, 1, idx_bytes, ib_out);
 
-    size_t out_bp_bytes = write_bp_chunk(
+    size_t out_bp_bytes = sm_write_bp_chunk(
       ops_buffer,
       cls_buffer,
       idx_bytes,
@@ -126,7 +126,7 @@ int main(
     fflush(bp_out);
   }
 
-  // write_bp_chunk_final(&bp_state, out_bp_buffer);
+  sm_write_bp_chunk_final(remaining_bp_bits, remaining_bp_bits_len, out_bp_buffer);
 
   fprintf(stderr, "Final state %u\n", state);
 
