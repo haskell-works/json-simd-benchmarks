@@ -97,7 +97,7 @@ int main(
       bytes_read = next_alignment;
     }
 
-    uint32_t chunk_state = state;
+    uint8_t chunk_state = state;
 
     sm_process_chunk(buffer, bytes_read,
       &state,
