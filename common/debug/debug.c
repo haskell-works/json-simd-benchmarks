@@ -64,3 +64,23 @@ void print_bits_64(uint64_t v) {
     printf("%c", digits[(v >> i) & 1]);
   }
 }
+
+void print_bits_128(__m128i v) {
+  for (int i = 0; i < 2; ++i) {
+    print_bits_64(_mm_extract_epi64(v, i));
+
+    if (i > 0) {
+      printf("-");
+    }
+  }
+}
+
+void print_bits_256(__m256i v) {
+  for (int i = 0; i < 4; ++i) {
+    print_bits_64(_mm256_extract_epi64(v, i));
+
+    if (i > 0) {
+      printf("-");
+    }
+  }
+}
