@@ -37,3 +37,12 @@ sm_make_ib_bp_chunks(
     uint8_t *out_ibs,
     uint8_t *out_ops,
     uint8_t *out_cls);
+
+void
+sm_make_ib_op_cl_chunks(
+    uint8_t state,
+    uint32_t *in_phis,
+    size_t phi_length,
+    uint8_t *out_ibs,
+    uint8_t *out_ops,
+    uint8_t *out_cls);

@@ -112,7 +112,7 @@ int main(
 
     fwrite(ibs_buffer, 1, idx_bytes, ib_out);
 
-    size_t out_bp_bytes = sm_write_bp_chunk(
+    size_t out_bp_w64s = sm_write_bp_chunk(
       ops_buffer,
       cls_buffer,
       idx_bytes,
@@ -120,17 +120,17 @@ int main(
       &remaining_bp_bits_len,
       out_bp_buffer);
 
-    fwrite(out_bp_buffer, out_bp_bytes, sizeof(uint64_t), bp_out);
+    fwrite(out_bp_buffer, out_bp_w64s, sizeof(uint64_t), bp_out);
 
     fflush(ib_out);
     fflush(bp_out);
   }
 
-  sm_write_bp_chunk_final(remaining_bp_bits, remaining_bp_bits_len, out_bp_buffer);
+  size_t out_bp_w64s = sm_write_bp_chunk_final(remaining_bp_bits, remaining_bp_bits_len, (uint64_t *)out_bp_buffer);
 
   fprintf(stderr, "Final state %u\n", state);
 
-  fwrite(out_bp_buffer, 2, sizeof(uint64_t), bp_out);
+  fwrite(out_bp_buffer, out_bp_w64s, sizeof(uint64_t), bp_out);
 
   fclose(in);
   fclose(ib_out);
