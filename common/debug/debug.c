@@ -66,21 +66,21 @@ void print_bits_64(uint64_t v) {
 }
 
 void print_bits_128(__m128i v) {
-  for (int i = 0; i < 2; ++i) {
-    if (i > 0) {
-      printf("-");
-    }
+  // for (int i = 0; i < 2; ++i) {
+  //   if (i > 0) {
+  //     printf("-");
+  //   }
 
-    print_bits_64(_mm_extract_epi64(v, i));
-  }
+  //   print_bits_64(_mm_extract_epi64(v, i));
+  // }
 }
 
 void print_bits_256(__m256i v) {
-  for (int i = 0; i < 4; ++i) {
-    if (i > 0) {
-      printf("-");
-    }
+  // for (int i = 0; i < 4; ++i) {
+  //   if (i > 0) {
+  //     printf("-");
+  //   }
 
-    print_bits_64(_mm256_extract_epi64(v, i));
-  }
+  //   print_bits_64(_mm256_extract_epi64(v, i));
+  // }
 }

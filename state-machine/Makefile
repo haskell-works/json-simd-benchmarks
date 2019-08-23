@@ -6,7 +6,6 @@ INSTALL_PROGRAM = $(INSTALL)
 INSTALL_DATA = $(INSTALL) -m 644
 
 DIRS = \
-	generate \
 	common \
 	basic  \
 	aggressive-128-0 \
