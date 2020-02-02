@@ -39,4 +39,6 @@
 # Haskell
 .stack-work
 dist
+dist-newstyle
+.ghc.environment.*
 
