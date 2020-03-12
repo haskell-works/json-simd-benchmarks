@@ -5,7 +5,7 @@ INSTALL = /usr/bin/install
 INSTALL_PROGRAM = $(INSTALL)
 INSTALL_DATA = $(INSTALL) -m 644
 
-DIRS = common state-machine slicing mmx
+DIRS = psubusb
 
 # the sets of directories to do various things in
 BUILDDIRS = $(DIRS:%=build-%)
